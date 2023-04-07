@@ -23,6 +23,7 @@ const refs = {
   hoursCounter: document.querySelector('[data-hours]'),
   minutesCounter: document.querySelector('[data-minutes]'),
   secondsCounter: document.querySelector('[data-seconds]'),
+  timerID: null,
 };
 
 //! LISTENERS AND START VALUES
@@ -42,6 +43,7 @@ function calculateTimeRemain(currentTime) {
     refs.hoursCounter.textContent = hours;
     refs.minutesCounter.textContent = minutes;
     refs.secondsCounter.textContent = seconds;
+    console.log('sdsd');
   } else {
     alert('Please choose a date in the future');
     return;
@@ -50,7 +52,7 @@ function calculateTimeRemain(currentTime) {
 
 function startTimer() {
   const dateCurrent = new Date();
-  const timerID = setInterval(calculateTimeRemain(dateCurrent), 1000);
+  refs.timerID = setInterval(calculateTimeRemain(dateCurrent), 1000);
 }
 
 function buttonActiveSwitch() {
