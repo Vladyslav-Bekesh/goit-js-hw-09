@@ -56,14 +56,14 @@ function startTimer() {
     }
     const { days, hours, minutes, seconds } = convertMs(diff);
 
-    refs.daysCounter.textContent = days;
-    refs.hoursCounter.textContent = hours;
-    refs.minutesCounter.textContent = minutes;
-    refs.secondsCounter.textContent = seconds;
+    refs.daysCounter.textContent = days.toString().padStart(2,'0');
+    refs.hoursCounter.textContent = hours.toString().padStart(2,'0');
+    refs.minutesCounter.textContent = minutes.toString().padStart(2,'0');
+    refs.secondsCounter.textContent = seconds.toString().padStart(2,'0');
 
 
-    refs.timeInput = true;
-    refs.btnStart.disabled = true;
+    refs.timeInput = true ;
+    refs.btnStart.disabled = true ;
   }, 1000);
 }
 function convertMs(ms) {
