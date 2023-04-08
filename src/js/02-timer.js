@@ -3,6 +3,20 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+//! REFERENCES
+const refs = {
+  btnStart: document.querySelector('[data-start]'),
+  timeInput: document.getElementById('datetime-picker'),
+  daysCounter: document.querySelector('[data-days]'),
+  hoursCounter: document.querySelector('[data-hours]'),
+  minutesCounter: document.querySelector('[data-minutes]'),
+  secondsCounter: document.querySelector('[data-seconds]'),
+};
+
+let timerID = null;
+let TIMER_DEADLINE = null;
+refs.btnStart.disabled = true;
+
 //* FLATPEKR options
 
 const options = {
@@ -12,67 +26,45 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     console.log(selectedDates[0]);
-  },
-};
+    if (selectedDates[0] < options.defaultDate) {
+      alert('Please choose a date in the future');
+      return;
+    }
+    refs.btnStart.disabled = false;
+    alert('you choosed correct date');
 
-//! REFERENCES
-const refs = {
-  btnStart: document.querySelector('[data-start]'),
-  timeInput: document.getElementById('datetime-picker'),
-  timerID: null,
-  daysCounter: document.querySelector('[data-days]'),
-  hoursCounter: document.querySelector('[data-hours]'),
-  minutesCounter: document.querySelector('[data-minutes]'),
-  secondsCounter: document.querySelector('[data-seconds]'),
+    TIMER_DEADLINE = selectedDates[0];
+  },
 };
 
 //! LISTENERS AND START VALUES
 refs.btnStart.addEventListener('click', startTimer);
-refs.timeInput.addEventListener('change', buttonActiveSwitch);
 
 const fp = flatpickr(refs.timeInput, options);
 
 //! FUNCTIONS
 
-function calculateTimeRemain(currentTime) {
-  const currentDate = new Date();
-  const selectedDate = fp.selectedDates[0];
-  const timeRemaining = selectedDate - currentDate;
-
-  if (timeRemaining < 0) {
-    clearInterval(refs.timerID);
-    alert('Please choose a date in the future');
-    return;
-  }
-
-  const { days, hours, minutes, seconds } = convertMs(
-    fp.selectedDates[0] - currentTime
-  );
-
-  refs.daysCounter.textContent = days;
-  refs.hoursCounter.textContent = hours;
-  refs.minutesCounter.textContent = minutes;
-  refs.secondsCounter.textContent = seconds;
-  
-  console.log(timeRemaining);
-
-  if (timeRemaining < 1000) {
-    clearInterval(refs.timerID);
-    console.log('WAKE UP!!');
-    return;
-  }
-}
-
 function startTimer() {
-  const dateCurrent = new Date();
-  calculateTimeRemain(dateCurrent);
-  refs.timerID = setInterval(() => {
-    calculateTimeRemain(dateCurrent);
-  }, 1000);
-}
+  timerID = setInterval(() => {
+    const now = Date.now();
+    const diff = TIMER_DEADLINE - now;
+    if (diff < 0) {
+      clearInterval(timerID);
+      refs.timeInput = false;
+      refs.btnStart.disabled = false;
+      alert('WAKE UP. TIME TO LIVE');
+    }
+    const { days, hours, minutes, seconds } = convertMs(diff);
 
-function buttonActiveSwitch() {
-  refs.btnStart.disabled = false;
+    refs.daysCounter.textContent = days;
+    refs.hoursCounter.textContent = hours;
+    refs.minutesCounter.textContent = minutes;
+    refs.secondsCounter.textContent = seconds;
+
+
+    refs.timeInput = true;
+    refs.btnStart.disabled = true;
+  }, 1000);
 }
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -92,17 +84,3 @@ function convertMs(ms) {
 
   return { days, hours, minutes, seconds };
 }
-
-// if (fp.selectedDates[0] - currentTime > 1000) {
-//   const { days, hours, minutes, seconds } = convertMs(
-//     fp.selectedDates[0] - currentTime
-//   );
-//   refs.daysCounter.textContent = days;
-//   refs.hoursCounter.textContent = hours;
-//   refs.minutesCounter.textContent = minutes;
-//   refs.secondsCounter.textContent = seconds;
-//   console.log(fp.selectedDates[0] - currentTime);
-// } else {
-//   alert('Please choose a date in the future');
-//   clearInterval(refs.timerID);
-// }
