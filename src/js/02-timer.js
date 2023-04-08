@@ -19,11 +19,11 @@ const options = {
 const refs = {
   btnStart: document.querySelector('[data-start]'),
   timeInput: document.getElementById('datetime-picker'),
+  timerID: null,
   daysCounter: document.querySelector('[data-days]'),
   hoursCounter: document.querySelector('[data-hours]'),
   minutesCounter: document.querySelector('[data-minutes]'),
   secondsCounter: document.querySelector('[data-seconds]'),
-  timerID: null,
 };
 
 //! LISTENERS AND START VALUES
@@ -52,7 +52,7 @@ function calculateTimeRemain(currentTime) {
   refs.daysCounter.textContent = days;
   refs.hoursCounter.textContent = hours;
   refs.minutesCounter.textContent = minutes;
-  refs.secondsCounter.innerText = seconds;
+  refs.secondsCounter.textContent = seconds;
   
   console.log(timeRemaining);
 
