@@ -48,22 +48,27 @@ function startTimer() {
   timerID = setInterval(() => {
     const now = Date.now();
     const diff = TIMER_DEADLINE - now;
-    if (diff < 0) {
+    if (diff < 1000) {
       clearInterval(timerID);
       refs.timeInput = false;
       refs.btnStart.disabled = false;
+
+      refs.daysCounter.textContent = '00';
+      refs.hoursCounter.textContent = '00';
+      refs.minutesCounter.textContent = '00';
+      refs.secondsCounter.textContent = '00';
+
       alert('WAKE UP. TIME TO LIVE');
     }
     const { days, hours, minutes, seconds } = convertMs(diff);
 
-    refs.daysCounter.textContent = days.toString().padStart(2,'0');
-    refs.hoursCounter.textContent = hours.toString().padStart(2,'0');
-    refs.minutesCounter.textContent = minutes.toString().padStart(2,'0');
-    refs.secondsCounter.textContent = seconds.toString().padStart(2,'0');
+    refs.daysCounter.textContent = days.toString().padStart(2, '0');
+    refs.hoursCounter.textContent = hours.toString().padStart(2, '0');
+    refs.minutesCounter.textContent = minutes.toString().padStart(2, '0');
+    refs.secondsCounter.textContent = seconds.toString().padStart(2, '0');
 
-
-    refs.timeInput = true ;
-    refs.btnStart.disabled = true ;
+    refs.timeInput = true;
+    refs.btnStart.disabled = true;
   }, 1000);
 }
 function convertMs(ms) {
