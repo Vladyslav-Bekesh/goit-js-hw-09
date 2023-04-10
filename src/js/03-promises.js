@@ -2,45 +2,48 @@ import Notiflix from 'notiflix';
 
 const refs = {
   form: document.querySelector('.form'),
-  inputDelay: document.querySelector('[name="delay"]'),
-  inputStep: document.querySelector('[name="step"]'),
-  inputAmount: document.querySelector('[name="amount"]'),
+  delay: document.querySelector('[name="delay"]'),
+  step: document.querySelector('[name="step"]'),
+  amount: document.querySelector('[name="amount"]'),
 };
-let timerId = null;
 
 refs.form.addEventListener('submit', event => {
   event.preventDefault();
-  setTimeout(() => {
-    let pos = 1;
-    while (pos <= refs.inputAmount.value) {
-      
-      createPromise(pos, refs.inputStep.value)
-        .then(saccesfullMessage => {
-          Notiflix.Notify.success(`${saccesfullMessage}`);
-          // console.log(`done|, pos:${pos}`);
-        })
-        .catch(unSaccesfullMessage => {
-          Notiflix.Notify.failure(`${unSaccesfullMessage}`);
-          // console.log(`not done|, pos:${pos}`);
-        });
-      
-      pos += 1;
-    }
-  }, refs.inputDelay.value);
+
+  const { delay, amount, step } = refs;
+  let stepChange = delay.value;
+
+  for (let i = 0; i < amount.value; i++) {
+    createPromise(i, stepChange)
+      .then(({ position, delay }) => {
+        Notiflix.Notify.success(
+          `✅ Fulfilled promise ${position} in ${delay}ms`
+        );
+
+        console.log(`done|, pos:${position}, del${delay}`);
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.failure(
+          `❌ Rejected promise ${position} in ${delay}ms`
+        );
+
+        console.log(`not done|, pos:${position}, del${delay}`);
+      });
+
+    stepChange += step.value;
+  }
 });
 
 function createPromise(position, delay) {
-  return new Promise((resolve, reject) => {
-    const shouldResolve = Math.random() > 0.3;
+  const shouldResolve = Math.random() > 0.3;
 
-    console.log(position);
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (shouldResolve) {
-        resolve(`work, ${delay} pos:${position}`);
+        resolve({ position, delay });
       } else {
-        reject(`NOT work, ${delay} pos:${position}`);
+        reject({ position, delay });
       }
     }, delay);
   });
-
 }
