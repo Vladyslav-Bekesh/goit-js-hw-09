@@ -11,9 +11,10 @@ refs.form.addEventListener('submit', event => {
   event.preventDefault();
 
   const { delay, amount, step } = refs;
-  let stepChange = delay.value;
+  let stepChange = Number(delay.value);
 
-  for (let i = 0; i < amount.value; i++) {
+
+  for (let i = 0; i < Number(amount.value); i++) {
     createPromise(i, stepChange)
       .then(({ position, delay }) => {
         Notiflix.Notify.success(
@@ -30,7 +31,7 @@ refs.form.addEventListener('submit', event => {
         console.log(`not done|, pos:${position}, del${delay}`);
       });
 
-    stepChange += step.value;
+    stepChange += Number(step.value);
   }
 });
 
